@@ -8,6 +8,7 @@ class SpacefarerService extends cds.ApplicationService {
     this.Spacesuits = entries.Spacesuits;
     this.SpacefareSkills = entries.SpacefareSkills;
     this.Skills = entries.Skills;
+    this.Stardusts = entries.Stardusts;
     this.wormholeNavigationIdCache = null;
   }
 
@@ -24,8 +25,9 @@ class SpacefarerService extends cds.ApplicationService {
     });
 
     this.before('CREATE', this.Spacefarers, async (req) => {
-      const { skills } = req.data;
-      const updatedSkills = this.enhanceWormholeNavigationSkill(skills);
+      const { skills, stardusts } = req.data;
+      const updatedSkills = await this.enhanceWormholeNavigationSkill(skills);
+      const updatedStardusts = await this.enhanceStarDustCollection(stardusts);
       const availableSuit = await this.getAvailableSuit();
 
       if (!availableSuit) {
@@ -38,6 +40,7 @@ class SpacefarerService extends cds.ApplicationService {
 
       req.data.spacesuit_ID = availableSuit.ID;
       req.data.skills = updatedSkills;
+      req.data.stardusts = updatedStardusts;
     });
 
     return super.init();
@@ -98,6 +101,28 @@ class SpacefarerService extends cds.ApplicationService {
             : [wormholeNavigationSkill]
         )
     );
+  }
+
+  async enhanceStarDustCollection(stardusts) {
+    let collectionSize = stardusts
+      ? stardusts.reduce((sum, item) => sum + item.quantity, 0)
+      : 0;
+
+    if (collectionSize >= 10) {
+      console.log('Ready for adventure');
+      return stardusts;
+    }
+
+    const randomStardust = await cds.db.run(
+      SELECT.one.from(this.Stardusts).orderBy('RANDOM()')
+    );
+
+    const res = stardusts ?? [];
+    res.push({
+      stardust_ID: randomStardust.ID,
+      quantity: 10 - collectionSize,
+    });
+    return res;
   }
 
   async getAvailableSuit() {
