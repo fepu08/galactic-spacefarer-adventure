@@ -73,7 +73,6 @@ class SpacefarerService extends cds.ApplicationService {
   }
 
   async enhanceWormholeNavigationSkill(skills) {
-    const db = cds.transaction(skills);
     let wormholeNavigationSkillId = await this.getWormholeNavigationSkillId();
 
     const wormholeNavigationSkill = skills.find(
