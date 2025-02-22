@@ -1,0 +1,3 @@
+### GET Skills
+GET http://localhost:4004/spacefarers/Skills
+Authorization: Basic alice:

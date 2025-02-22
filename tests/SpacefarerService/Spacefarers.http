@@ -6,11 +6,18 @@ GET http://localhost:4004/spacefarers/Spacefarers?
   # &sap-language=de
 Authorization: Basic alice:
 
+### Get Spacefarer by ID
+GET http://localhost:4004/spacefarers/Spacefarers(61be4551-5f87-43bf-b662-beb9c2c417d2)
+  # &$select=title,stock
+  # &$expand=currency
+  # &sap-language=de
+Authorization: Basic alice:
+
 ### Expand Spacefarers with skills
 GET http://localhost:4004/spacefarers/Spacefarers?$expand=skills 
 Authorization: Basic alice:
 
-### Expand Spacefarers with stardust collection
+### Expand SpVacefarers with stardust collection
 GET http://localhost:4004/spacefarers/Spacefarers?$expand=stardusts 
 Authorization: Basic alice:
 
@@ -35,11 +42,6 @@ Content-Type: application/json
 	]
 }
 
-### Create Skill
-POST http://localhost:4004/spacefarers/Skills
+### Delete Spacefarer
+DELETE http://localhost:4004/spacefarers/Spacefarers(61be4551-5f87-43bf-b662-beb9c2c417d2)
 Authorization: Basic alice:
-Content-Type: application/json
-
-{
-	"title": "Some skill"
-}
