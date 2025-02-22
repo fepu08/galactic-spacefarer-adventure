@@ -1,0 +1,45 @@
+
+### Browse Spacefarers
+GET http://localhost:4004/spacefarers/Spacefarers?
+  # &$select=title,stock
+  # &$expand=currency
+  # &sap-language=de
+Authorization: Basic alice:
+
+### Expand Spacefarers with skills
+GET http://localhost:4004/spacefarers/Spacefarers?$expand=skills 
+Authorization: Basic alice:
+
+### Expand Spacefarers with stardust collection
+GET http://localhost:4004/spacefarers/Spacefarers?$expand=stardusts 
+Authorization: Basic alice:
+
+### Create Spacefarer
+POST http://localhost:4004/spacefarers/Spacefarers
+Authorization: Basic alice:
+Content-Type: application/json
+
+{
+	"first_name": "John",
+	"last_name": "Doe",
+	"birthday": "2085-01-12",
+	"email": "john_doe@",
+	"position_ID": "8cd056da-fdcc-4ba2-b676-f65ead1ef0d3",
+	"department_ID": "7ea5bdfc-e6f6-4032-9ab5-3471fc9f5563",
+	"origin_planet_ID": "cb1453c2-7409-48f4-b9c8-81a5bc004e16",
+	"skills": [
+		{
+			"skill_ID": "5ff6b53a-71fd-486a-8f8a-c12fd4b96d9",
+			"proficiency": 3
+		}
+	]
+}
+
+### Create Skill
+POST http://localhost:4004/spacefarers/Skills
+Authorization: Basic alice:
+Content-Type: application/json
+
+{
+	"title": "Some skill"
+}
