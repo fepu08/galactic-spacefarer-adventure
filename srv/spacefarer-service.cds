@@ -21,4 +21,6 @@ service SpacefarerService @(requires:'authenticated-user', path: '/spacefarers')
 	}
 
 	entity Spacesuits as projection on my.Spacesuits;
+	
+	entity Stardusts as projection on my.Stardusts;
 }
