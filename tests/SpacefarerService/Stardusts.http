@@ -1,0 +1,3 @@
+### GET Stardusts
+GET http://localhost:4004/spacefarers/Stardusts
+Authorization: Basic alice:

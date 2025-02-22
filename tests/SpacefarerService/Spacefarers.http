@@ -1,0 +1,47 @@
+
+### Browse Spacefarers
+GET http://localhost:4004/spacefarers/Spacefarers?
+  # &$select=title,stock
+  # &$expand=currency
+  # &sap-language=de
+Authorization: Basic alice:
+
+### Get Spacefarer by ID
+GET http://localhost:4004/spacefarers/Spacefarers(61be4551-5f87-43bf-b662-beb9c2c417d2)
+  # &$select=title,stock
+  # &$expand=currency
+  # &sap-language=de
+Authorization: Basic alice:
+
+### Expand Spacefarers with skills
+GET http://localhost:4004/spacefarers/Spacefarers?$expand=skills 
+Authorization: Basic alice:
+
+### Expand SpVacefarers with stardust collection
+GET http://localhost:4004/spacefarers/Spacefarers?$expand=stardusts 
+Authorization: Basic alice:
+
+### Create Spacefarer
+POST http://localhost:4004/spacefarers/Spacefarers
+Authorization: Basic alice:
+Content-Type: application/json
+
+{
+	"first_name": "John",
+	"last_name": "Doe",
+	"birthday": "2085-01-12",
+	"email": "john_doe@",
+	"position_ID": "8cd056da-fdcc-4ba2-b676-f65ead1ef0d3",
+	"department_ID": "7ea5bdfc-e6f6-4032-9ab5-3471fc9f5563",
+	"origin_planet_ID": "cb1453c2-7409-48f4-b9c8-81a5bc004e16",
+	"skills": [
+		{
+			"skill_ID": "0efd6e5f-1811-499d-9924-c89699ac7dda",
+			"proficiency": 3
+		}
+	]
+}
+
+### Delete Spacefarer
+DELETE http://localhost:4004/spacefarers/Spacefarers(61be4551-5f87-43bf-b662-beb9c2c417d2)
+Authorization: Basic alice:

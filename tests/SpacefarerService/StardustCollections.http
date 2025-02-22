@@ -1,0 +1,7 @@
+### GET StardustCollections
+GET http://localhost:4004/spacefarers/StardustCollections
+Authorization: Basic alice:
+
+### GET StardustCollections by Spacefarer ID
+GET http://localhost:4004/spacefarers/StardustCollections?$filter=spacefarer_ID eq 61be4551-5f87-43bf-b662-beb9c2c417d2
+Authorization: Basic alice:
