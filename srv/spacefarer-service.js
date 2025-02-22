@@ -34,35 +34,6 @@ class SpacefarerService extends cds.ApplicationService {
       req.data.spacesuit_ID = availableSuit.ID;
     });
 
-    this.on('CREATE', Spacefarers, async (req) => {
-      const { skills, ...spacefarerData } = req.data;
-      const db = cds.transaction(req);
-
-      const [createdSpacefarer] = await db.run(
-        INSERT.into(Spacefarers).entries(spacefarerData)
-      );
-
-      if (!createdSpacefarer.ID) {
-        req.error(500, 'Failed to create Spacefarer');
-        return;
-      }
-
-      if (skills && skills.length > 0) {
-        const skillEntries = skills.map((skill) => ({
-          spacefarer_ID: createdSpacefarer.ID,
-          skill_ID: skill.skill_ID,
-          proficiency: skill.proficiency || 0,
-        }));
-
-        await db.run(INSERT.into(SpacefarerSkills).entries(skillEntries));
-      }
-
-      // Note for the reviewer: we could also add stardust collection here but let assume that
-      // rookie spacefarers have no collection on their first day 🤖
-
-      return createdSpacefarer;
-    });
-
     return super.init();
   }
 }
