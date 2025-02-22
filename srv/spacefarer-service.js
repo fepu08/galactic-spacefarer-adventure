@@ -1,10 +1,17 @@
 const cds = require('@sap/cds');
 
 class SpacefarerService extends cds.ApplicationService {
-  async init() {
-    const { Spacefarers, Spacesuits, SpacefarerSkills, Skills } =
-      cds.entities('SpacefarerService');
+  constructor(...args) {
+    super(...args);
+    const entries = cds.entities('SpacefarerService');
+    this.Spacefarers = entries.Spacefarers;
+    this.Spacesuits = entries.Spacesuits;
+    this.SpacefareSkills = entries.SpacefareSkills;
+    this.Skills = entries.Skills;
+    this.wormholeNavigationIdCache = null;
+  }
 
+  async init() {
     this.before('*', (req) => {
       /* @(requires:'authenticated-user') catch it anyways */
       if (
@@ -16,13 +23,10 @@ class SpacefarerService extends cds.ApplicationService {
       }
     });
 
-    this.before('CREATE', Spacefarers, async (req) => {
+    this.before('CREATE', this.Spacefarers, async (req) => {
       const { skills } = req.data;
       const updatedSkills = this.enhanceWormholeNavigationSkill(skills);
-      const availableSuit = await this.getAvailableSuit(
-        Spacefarers,
-        Spacesuits
-      );
+      const availableSuit = await this.getAvailableSuit();
 
       if (!availableSuit) {
         req.error(
@@ -39,8 +43,39 @@ class SpacefarerService extends cds.ApplicationService {
     return super.init();
   }
 
-  enhanceWormholeNavigationSkill(skills) {
-    const wormholeNavigationSkillId = '0efd6e5f-1811-499d-9924-c89699ac7dda';
+  async getWormholeNavigationSkillId() {
+    if (this.wormholeNavigationIdCache) {
+      console.log('Cache Hit');
+      return this.wormholeNavigationIdCache;
+    }
+    console.log('Cache Miss');
+    let wormholeNavigationSkillId = null;
+    const existingSkill = await cds.db.run(
+      SELECT.one.from(this.Skills).where({ title: 'Wormhole Navigation' })
+    );
+
+    if (existingSkill) {
+      console.log('Wormhole Navigation Skill exists');
+      wormholeNavigationSkillId = existingSkill.ID;
+    } else {
+      console.log('Creating "Wormhole Navigation" skill');
+      const [newSkill] = await cds.db.run(
+        INSERT.into(this.Skills).entries({
+          title: 'Wormhole Navigation',
+        })
+      );
+      wormholeNavigationSkillId = newSkill.ID;
+    }
+
+    // Cache the ID to avoid unnecessary DB queries
+    this.wormholeNavigationIdCache = wormholeNavigationSkillId;
+    return this.wormholeNavigationIdCache;
+  }
+
+  async enhanceWormholeNavigationSkill(skills) {
+    const db = cds.transaction(skills);
+    let wormholeNavigationSkillId = await this.getWormholeNavigationSkillId();
+
     const wormholeNavigationSkill = skills.find(
       (skill) => skill.skill_ID === wormholeNavigationSkillId
     ) ?? { skill_ID: wormholeNavigationSkillId, proficiency: 0 };
@@ -66,10 +101,10 @@ class SpacefarerService extends cds.ApplicationService {
     );
   }
 
-  async getAvailableSuit(Spacefarers, Spacesuits) {
+  async getAvailableSuit() {
     const availableSuit = await cds.db.run(
-      SELECT.one.from(Spacesuits)
-        .where`ID NOT IN (SELECT spacesuit_ID FROM ${Spacefarers})`
+      SELECT.one.from(this.Spacesuits)
+        .where`ID NOT IN (SELECT spacesuit_ID FROM ${this.Spacefarers})`
     );
 
     return availableSuit;
