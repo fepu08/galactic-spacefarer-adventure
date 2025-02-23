@@ -1,25 +1,42 @@
-# Getting Started
+# Galactic Space Adventure
 
-Welcome to your new project.
+## Prerequisites
 
-It contains these folders and files, following our recommended project layout:
+Ensure you have the following installed before running the project:
 
-File or Folder | Purpose
----------|----------
-`app/` | content for UI frontends goes here
-`db/` | your domain models and data go here
-`srv/` | your service models and code go here
-`package.json` | project metadata and configuration
-`readme.md` | this getting started guide
+- [Node.js](https://nodejs.org/) (>= 14.x recommended)
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- [SAP CDS Development Kit](https://cap.cloud.sap/docs/get-started/) (Install globally using `npm install -g @sap/cds`)
 
+## 🚀 Setup and Run the Project (in development mode)
 
-## Next Steps
+### 1️⃣ Clone the Repository
 
-- Open a new terminal and run `cds watch`
-- (in VS Code simply choose _**Terminal** > Run Task > cds watch_)
-- Start adding content, for example, a [db/schema.cds](db/schema.cds).
+```sh
+$ git clone https://github.com/fepu08/galactic-spacefarer-adventure.git
+$ cd galactic-space-adventure
+```
 
+### 2️⃣ Install Dependencies
 
-## Learn More
+```sh
+$ npm install
+```
 
-Learn more at https://cap.cloud.sap/docs/get-started/.
+### 3️⃣ Create the `.env` File
+
+To enable email notifications, you must create a `.env` file based on the `.env.example` file.
+
+```sh
+$ cp .env.example .env
+```
+
+Then, open `.env` and configure the email settings.
+
+### 4️⃣ Start the CAP Server
+
+```sh
+$ cds watch
+```
+
+This will start the CAP service and automatically reload changes.
