@@ -1,11 +1,19 @@
 const cds = require('@sap/cds');
+const nodemailer = require('nodemailer');
 
 class SpacefarerService extends cds.ApplicationService {
-  /** Registering custom event handlers */
-  async init() {
-    const { Spacefarers, Spacesuits, SpacefarerSkills, Skills } =
-      cds.entities('SpacefarerService');
+  constructor(...args) {
+    super(...args);
+    const entries = cds.entities('SpacefarerService');
+    this.Spacefarers = entries.Spacefarers;
+    this.Spacesuits = entries.Spacesuits;
+    this.SpacefareSkills = entries.SpacefareSkills;
+    this.Skills = entries.Skills;
+    this.Stardusts = entries.Stardusts;
+    this.wormholeNavigationIdCache = null;
+  }
 
+  async init() {
     this.before('*', (req) => {
       /* @(requires:'authenticated-user') catch it anyways */
       if (
@@ -17,11 +25,11 @@ class SpacefarerService extends cds.ApplicationService {
       }
     });
 
-    this.before('CREATE', Spacefarers, async (req) => {
-      const availableSuit = await cds.db.run(
-        SELECT.one.from(Spacesuits)
-          .where`ID NOT IN (SELECT spacesuit_ID FROM ${Spacefarers})`
-      );
+    this.before('CREATE', this.Spacefarers, async (req) => {
+      const { skills, stardusts } = req.data;
+      const updatedSkills = await this.enhanceWormholeNavigationSkill(skills);
+      const updatedStardusts = await this.enhanceStarDustCollection(stardusts);
+      const availableSuit = await this.getAvailableSuit();
 
       if (!availableSuit) {
         req.error(
@@ -32,9 +40,125 @@ class SpacefarerService extends cds.ApplicationService {
       }
 
       req.data.spacesuit_ID = availableSuit.ID;
+      req.data.skills = updatedSkills;
+      req.data.stardusts = updatedStardusts;
+    });
+
+    this.after('CREATE', this.Spacefarers, async (req) => {
+      try {
+        await this.sendEmail(req.email, `${req.first_name} ${req.last_name}`);
+        console.log(`Email sent to ${req.email}`);
+      } catch (error) {
+        console.error('Error sending email:', error);
+      }
     });
 
     return super.init();
+  }
+
+  async getWormholeNavigationSkillId() {
+    if (this.wormholeNavigationIdCache) {
+      console.log('Cache Hit');
+      return this.wormholeNavigationIdCache;
+    }
+    console.log('Cache Miss');
+    let wormholeNavigationSkillId = null;
+    const existingSkill = await cds.db.run(
+      SELECT.one.from(this.Skills).where({ title: 'Wormhole Navigation' })
+    );
+
+    if (existingSkill) {
+      console.log('Wormhole Navigation Skill exists');
+      wormholeNavigationSkillId = existingSkill.ID;
+    } else {
+      console.log('Creating "Wormhole Navigation" skill');
+      const [newSkill] = await cds.db.run(
+        INSERT.into(this.Skills).entries({
+          title: 'Wormhole Navigation',
+        })
+      );
+      wormholeNavigationSkillId = newSkill.ID;
+    }
+
+    // Cache the ID to avoid unnecessary DB queries
+    this.wormholeNavigationIdCache = wormholeNavigationSkillId;
+    return this.wormholeNavigationIdCache;
+  }
+
+  async enhanceWormholeNavigationSkill(skills) {
+    let wormholeNavigationSkillId = await this.getWormholeNavigationSkillId();
+
+    const wormholeNavigationSkill = skills.find(
+      (skill) => skill.skill_ID === wormholeNavigationSkillId
+    ) ?? { skill_ID: wormholeNavigationSkillId, proficiency: 0 };
+
+    while (wormholeNavigationSkill.proficiency < 5) {
+      console.log('Watching a tutorial about Wormhole Navigation...');
+      ++wormholeNavigationSkill.proficiency;
+    }
+
+    return (
+      skills
+        .map((skill) =>
+          skill.skill_ID === wormholeNavigationSkill
+            ? wormholeNavigationSkill
+            : skill
+        )
+        // add skill if it does not exist
+        .concat(
+          skills.some((skill) => skill.skill_ID === wormholeNavigationSkillId)
+            ? []
+            : [wormholeNavigationSkill]
+        )
+    );
+  }
+
+  async enhanceStarDustCollection(stardusts) {
+    let collectionSize = stardusts
+      ? stardusts.reduce((sum, item) => sum + item.quantity, 0)
+      : 0;
+
+    if (collectionSize >= 10) {
+      console.log('Ready for adventure');
+      return stardusts;
+    }
+
+    const randomStardust = await cds.db.run(
+      SELECT.one.from(this.Stardusts).orderBy('RANDOM()')
+    );
+
+    const res = stardusts ?? [];
+    res.push({
+      stardust_ID: randomStardust.ID,
+      quantity: 10 - collectionSize,
+    });
+    return res;
+  }
+
+  async getAvailableSuit() {
+    const availableSuit = await cds.db.run(
+      SELECT.one.from(this.Spacesuits)
+        .where`ID NOT IN (SELECT spacesuit_ID FROM ${this.Spacefarers})`
+    );
+
+    return availableSuit;
+  }
+
+  sendEmail(to, name) {
+    const emailConfig = cds.env.requires.emailConfig;
+    if (!emailConfig) {
+      throw new Error('No Email config set.');
+    }
+    const transporter = nodemailer.createTransport(emailConfig);
+
+    const mailOptions = {
+      from: 'Spacefarers',
+      to,
+      subject: 'Welcome to Spacefarers',
+      text: `Congratulation ${name}! Your adventure begins now.`,
+    };
+
+    return transporter.sendMail(mailOptions);
   }
 }
 

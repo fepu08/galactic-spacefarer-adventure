@@ -7,6 +7,9 @@ type SpacesuitType : String enum {
     Explorer  = 'explorer';
 }
 
+@assert.unique : {
+   email: [ email ]
+}
 entity Spacefarers : managed, cuid {
 	position: Association to Positions;
 	department: Association to Departments;
@@ -19,17 +22,23 @@ entity Spacefarers : managed, cuid {
 	@mandatory last_name: String;
 	nick_name: String;
 	@mandatory birthday: Date;
-	@mandatory @assert.unique email: String;
+	@mandatory email: String;
 }
 
+@assert.unique  : {
+	title: [ title ]
+}
 entity Positions: cuid {
-	@mandatory @assert.unique title: String;
+	@mandatory title: String;
 	@mandatory min_salary: Decimal(10,2);
 	@mandatory max_salary: Decimal(10,2);
 }
 
+@assert.unique  : {
+	title: [ title ]
+}
 entity Departments: cuid {
-	@mandatory @assert.unique title: String;
+	@mandatory title: String;
 }
 
 entity Spacesuits: cuid {
@@ -37,17 +46,26 @@ entity Spacesuits: cuid {
 	@mandatory color: String(6);
 }
 
+@assert.unique  : {
+	name: [ name ]
+}
 entity Planets: cuid {
-	@mandatory @assert.unique name: String;
+	@mandatory name: String;
 }
 
+@assert.unique  : {
+	name: [ name ]
+}
 entity Stardusts: cuid {
-	@mandatory @assert.unique name: String;
+	@mandatory name: String;
 	spacefarers: Composition of many Spacefarerstardusts on spacefarers.stardust = $self;
 }
 
+@assert.unique  : {
+	title: [ title ]
+}
 entity Skills: cuid {
-	@mandatory @assert.unique title: String;
+	@mandatory title: String;
 	spacefarers: Composition of many Spacefarerskills on spacefarers.skill = $self;
 	description: String;
 }
@@ -55,8 +73,8 @@ entity Skills: cuid {
 entity Spacefarerskills: cuid, managed {
 	@mandatory spacefarer: Association to Spacefarers;
 	@mandatory skill: Association to Skills;
-	@assert.range: [1,10]
-	proficiency: UInt8 default 1;
+	@assert.range: [0,10]
+	proficiency: UInt8 default 0;
 }
 
 entity Spacefarerstardusts: cuid, managed {

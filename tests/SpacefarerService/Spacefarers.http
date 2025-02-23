@@ -17,7 +17,7 @@ Authorization: Basic alice:
 GET http://localhost:4004/spacefarers/Spacefarers?$expand=skills 
 Authorization: Basic alice:
 
-### Expand SpVacefarers with stardust collection
+### Expand Spacefarers with stardust collection
 GET http://localhost:4004/spacefarers/Spacefarers?$expand=stardusts 
 Authorization: Basic alice:
 
@@ -30,7 +30,7 @@ Content-Type: application/json
 	"first_name": "John",
 	"last_name": "Doe",
 	"birthday": "2085-01-12",
-	"email": "john_doe@",
+	"email": "john_doe@test.com",
 	"position_ID": "8cd056da-fdcc-4ba2-b676-f65ead1ef0d3",
 	"department_ID": "7ea5bdfc-e6f6-4032-9ab5-3471fc9f5563",
 	"origin_planet_ID": "cb1453c2-7409-48f4-b9c8-81a5bc004e16",
@@ -38,6 +38,20 @@ Content-Type: application/json
 		{
 			"skill_ID": "0efd6e5f-1811-499d-9924-c89699ac7dda",
 			"proficiency": 3
+		},
+		{
+			"skill_ID": "5ff6b53a-71fd-486a-8f8a-c12fd4b96d9c",
+			"proficiency": 2
+		}
+	],
+	"stardusts": [
+		{
+			"stardust_ID": "c5621331-47d3-407e-96f0-4f113386aa7b",
+			"quantity": 3
+		},
+		{
+			"stardust_ID": "316091cf-b612-4046-85a6-4db18813c9e3",
+			"quantity": 2
 		}
 	]
 }
