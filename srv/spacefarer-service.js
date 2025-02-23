@@ -1,4 +1,5 @@
 const cds = require('@sap/cds');
+const nodemailer = require('nodemailer');
 
 class SpacefarerService extends cds.ApplicationService {
   constructor(...args) {
@@ -41,6 +42,15 @@ class SpacefarerService extends cds.ApplicationService {
       req.data.spacesuit_ID = availableSuit.ID;
       req.data.skills = updatedSkills;
       req.data.stardusts = updatedStardusts;
+    });
+
+    this.after('CREATE', this.Spacefarers, async (req) => {
+      try {
+        await this.sendEmail(req.email, `${req.first_name} ${req.last_name}`);
+        console.log(`Email sent to ${req.email}`);
+      } catch (error) {
+        console.error('Error sending email:', error);
+      }
     });
 
     return super.init();
@@ -132,6 +142,23 @@ class SpacefarerService extends cds.ApplicationService {
     );
 
     return availableSuit;
+  }
+
+  sendEmail(to, name) {
+    const emailConfig = cds.env.requires.emailConfig;
+    if (!emailConfig) {
+      throw new Error('No Email config set.');
+    }
+    const transporter = nodemailer.createTransport(emailConfig);
+
+    const mailOptions = {
+      from: 'Spacefarers',
+      to,
+      subject: 'Welcome to Spacefarers',
+      text: `Congratulation ${name}! Your adventure begins now.`,
+    };
+
+    return transporter.sendMail(mailOptions);
   }
 }
 
