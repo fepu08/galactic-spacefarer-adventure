@@ -30,7 +30,7 @@ Content-Type: application/json
 	"first_name": "John",
 	"last_name": "Doe",
 	"birthday": "2085-01-12",
-	"email": "john_doe@",
+	"email": "john_doe@test.com",
 	"position_ID": "8cd056da-fdcc-4ba2-b676-f65ead1ef0d3",
 	"department_ID": "7ea5bdfc-e6f6-4032-9ab5-3471fc9f5563",
 	"origin_planet_ID": "cb1453c2-7409-48f4-b9c8-81a5bc004e16",
