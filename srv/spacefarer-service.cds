@@ -8,7 +8,6 @@ service SpacefarerService @(requires:'authenticated-user', path: '/spacefarers')
 	};
 
 	entity SpacefarerSkills as projection on my.Spacefarerskills  {*,
-		CONCAT(spacefarer.first_name, ' ', spacefarer.last_name) as spacefarer_full_name,
 		skill.title as skill_title,
 		proficiency
 	}
@@ -16,7 +15,6 @@ service SpacefarerService @(requires:'authenticated-user', path: '/spacefarers')
 	entity Skills as projection on my.Skills;
   
   entity StardustCollections as projection on my.Spacefarerstardusts  {*,
-		CONCAT(spacefarer.first_name, ' ', spacefarer.last_name) as spacefarer_full_name,
 		stardust.name as starudst
 	}
 
