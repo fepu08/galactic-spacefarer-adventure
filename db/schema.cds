@@ -1,5 +1,5 @@
 using { managed, cuid } from '@sap/cds/common';
-namespace galactic_spacefarer_adventure;
+namespace aldi.cap.galactic_spacefarer_adventure;
 
 type SpacesuitType : String enum {
     Engineer = 'engineer';

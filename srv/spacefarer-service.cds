@@ -1,4 +1,4 @@
-using { galactic_spacefarer_adventure as my } from '../db/schema';
+using { aldi.cap.galactic_spacefarer_adventure  as my } from '../db/schema';
 
 service SpacefarerService @(requires:'authenticated-user', path: '/spacefarers') { 
   entity Spacefarers as projection on my.Spacefarers {*,
