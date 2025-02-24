@@ -1,11 +1,6 @@
 ID,title,min_salary,max_salary
-d64e26fc-7972-41bc-ac30-c6ce5dc7e62c,Galactic Engineer,17755.51,991422.7
-261e896c-b403-4156-91bd-65a3922cc642,Astrobyte Analyst,198868.14,857283.24
-34b02fdd-929b-4926-becd-d651ed068da8,Zero-Gravity Mechanic,143325.72,708177.96
-f374c1a6-0f3b-4d2d-9159-2efd9722412e,Lunar Terraformer,18999.63,573670.16
-7918afbb-82ca-478f-b378-8d1e409f917f,Quantum Navigation Specialist,131941.08,912083.6
-8cd056da-fdcc-4ba2-b676-f65ead1ef0d3,Cosmic Biologist,492899.66,558597.66
-253040c5-9bd4-446e-bc98-c43e33b5d6da,Exoplanet Surveyor,416699.14,509510.81
-89f86f3c-d737-4dab-a972-0a5045f0f463,Dark Matter Researcher,232001.57,627350.55
-775ccc76-bee6-4da6-a59d-574ac369cbdd,Starship AI Architect,113132.69,934584.9
-84d36db3-d4ae-4919-8577-1fd48694b50b,Orbital Security Officer,188683.63,806719.37
+bbf25b5e-738a-40a6-bb60-cb8365e58259,Pilot,50000,150000
+ce8a4b9a-20ef-4b21-a3e6-0850e3928838,Engineer,60000,160000
+c58df844-0dac-484c-8ebb-43cf61d9b577,Medic,55000,140000
+1af34c7e-2575-4a29-8ca9-e3075f5c3274,Navigator,58000,155000
+f43aeced-8fa5-47d2-b8ef-c864e4e09a37,Commander,80000,200000

@@ -15,8 +15,10 @@ entity Spacefarers : managed, cuid {
 	department: Association to Departments;
 	spacesuit: Association to Spacesuits;
 	origin_planet: Association to Planets;
-	skills: Composition of many Spacefarerskills on skills.spacefarer = $self;
-	stardusts: Composition of many Spacefarerstardusts on stardusts.spacefarer = $self;
+	@assert.range: [0,10]
+	wormhole_navigation_skill: UInt8 default 0;
+	@assert.range: [0,1000000]
+	stardust_collection: Integer default 0;
 
 	@mandatory first_name: String;
 	@mandatory last_name: String;
@@ -32,7 +34,7 @@ entity Positions: cuid {
 	@mandatory title: String;
 	@mandatory min_salary: Decimal(10,2);
 	@mandatory max_salary: Decimal(10,2);
-	spacefarers: Association to many Spacefarers on spacefarers.position = $self.ID
+	spacefarers: Association to many Spacefarers on spacefarers.position = $self
 }
 
 @assert.unique  : {
@@ -40,7 +42,7 @@ entity Positions: cuid {
 }
 entity Departments: cuid {
 	@mandatory title: String;
-	spacefarers: Association to many Spacefarers on spacefarers.department = $self.ID
+	spacefarers: Association to many Spacefarers on spacefarers.department = $self
 }
 
 entity Spacesuits: cuid {
@@ -53,34 +55,4 @@ entity Spacesuits: cuid {
 }
 entity Planets: cuid {
 	@mandatory name: String;
-}
-
-@assert.unique  : {
-	name: [ name ]
-}
-entity Stardusts: cuid {
-	@mandatory name: String;
-	spacefarers: Composition of many Spacefarerstardusts on spacefarers.stardust = $self;
-}
-
-@assert.unique  : {
-	title: [ title ]
-}
-entity Skills: cuid {
-	@mandatory title: String;
-	spacefarers: Composition of many Spacefarerskills on spacefarers.skill = $self;
-	description: String;
-}
-
-entity Spacefarerskills: cuid, managed {
-	@mandatory spacefarer: Association to Spacefarers;
-	@mandatory skill: Association to Skills;
-	@assert.range: [0,10]
-	proficiency: UInt8 default 0;
-}
-
-entity Spacefarerstardusts: cuid, managed {
-	@mandatory spacefarer: Association to Spacefarers;
-	@mandatory stardust: Association to Stardusts;
-	quantity: Integer
 }
