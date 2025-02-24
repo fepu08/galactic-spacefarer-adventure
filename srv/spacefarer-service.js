@@ -59,16 +59,18 @@ class SpacefarerService extends cds.ApplicationService {
   enhanceWormholeNavigationSkill(wormhole_navigation_skill) {
     if (wormhole_navigation_skill < 5) {
       console.log('Watching wormhole navigation tutorials on SpaceTube...');
+      return 5;
     }
 
-    return 5;
+    return wormhole_navigation_skill;
   }
 
   enhanceStarDustCollection(stardusts) {
     if (stardusts < 1000) {
       console.log('Collecting stardusts...');
+      return 1000;
     }
-    return 1000;
+    return stardusts;
   }
 
   async getAvailableSuit() {
