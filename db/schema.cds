@@ -32,6 +32,7 @@ entity Positions: cuid {
 	@mandatory title: String;
 	@mandatory min_salary: Decimal(10,2);
 	@mandatory max_salary: Decimal(10,2);
+	spacefarers: Association to many Spacefarers on spacefarers.position = $self.ID
 }
 
 @assert.unique  : {
@@ -39,6 +40,7 @@ entity Positions: cuid {
 }
 entity Departments: cuid {
 	@mandatory title: String;
+	spacefarers: Association to many Spacefarers on spacefarers.department = $self.ID
 }
 
 entity Spacesuits: cuid {
