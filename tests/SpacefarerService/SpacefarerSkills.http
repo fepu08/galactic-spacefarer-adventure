@@ -1,3 +1,0 @@
-### Get SpacefarerSkill by Spacefarer ID
-GET http://localhost:4004/spacefarers/SpacefarerSkills?$filter=spacefarer_ID eq 68fb1e78-42ba-4ca0-87f9-a8bb44d99fbe
-Authorization: Basic alice:
