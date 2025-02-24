@@ -6,9 +6,8 @@ type SpacesuitType : String enum {
     Armored  = 'armored';
     Explorer  = 'explorer';
 }
-
-@assert.unique : {
-   email: [ email ]
+@assert.unique  : {
+	spacesuit: [ spacesuit ]
 }
 entity Spacefarers : managed, cuid {
 	position: Association to Positions;
