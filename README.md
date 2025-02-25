@@ -40,3 +40,6 @@ $ cds watch
 ```
 
 This will start the CAP service and automatically reload changes.
+
+### Note
+You can log in with the users listed in `package.json`. All have an empty password.
