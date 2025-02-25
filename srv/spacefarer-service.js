@@ -45,15 +45,55 @@ class SpacefarerService extends cds.ApplicationService {
     });
 
     this.after('CREATE', this.Spacefarers, async (req) => {
+      const { spacesuit_color, spacesuit_ID } = req;
+      if (spacesuit_color && spacesuit_ID) {
+        await this.updateSpacesuitColor(spacesuit_color, spacesuit_ID);
+      }
+      await this.sendWelcomeEmail(
+        req.email,
+        `${req.first_name} ${req.last_name}`
+      );
+    });
+
+    this.on('UPDATE', this.Spacefarers, async (req) => {
+      const { spacesuit_color, spacesuit_ID, ...spacefarer } = req.data;
       try {
-        await this.sendEmail(req.email, `${req.first_name} ${req.last_name}`);
-        console.log(`Email sent to ${req.email}`);
+        if (spacesuit_color && spacesuit_ID) {
+          this.updateSpacesuitColor(spacesuit_color, spacesuit_ID);
+        }
+
+        await this.updateSpacefarer(spacefarer);
       } catch (error) {
-        console.error('Error sending email:', error);
+        console.error(`Error during updating spacefarer: ${error}`);
       }
     });
 
     return super.init();
+  }
+
+  async updateSpacefarer(spacefarer) {
+    await cds.run(
+      UPDATE(this.Spacefarers)
+        .set({
+          first_name: spacefarer.first_name,
+          last_name: spacefarer.last_name,
+          birthday: spacefarer.birthday,
+          stardust_collection: spacefarer.stardust_collection,
+          email: spacefarer.email,
+          wormhole_navigation_skill: spacefarer.wormhole_navigation_skill,
+        })
+        .where({ ID: spacefarer.ID })
+    );
+  }
+
+  async updateSpacesuitColor(spacesuit_color, spacesuit_ID) {
+    if (spacesuit_color && spacesuit_ID) {
+      await cds.run(
+        UPDATE(this.Spacesuits)
+          .set({ color: spacesuit_color })
+          .where({ ID: spacesuit_ID })
+      );
+    }
   }
 
   enhanceWormholeNavigationSkill(wormhole_navigation_skill) {
@@ -82,7 +122,7 @@ class SpacefarerService extends cds.ApplicationService {
     return availableSuit;
   }
 
-  sendEmail(to, name) {
+  async sendWelcomeEmail(toEmail, name) {
     const emailConfig = cds.env.requires.emailConfig;
     if (!emailConfig) {
       throw new Error('No Email config set.');
@@ -91,12 +131,17 @@ class SpacefarerService extends cds.ApplicationService {
 
     const mailOptions = {
       from: 'Spacefarers',
-      to,
+      to: toEmail,
       subject: 'Welcome to Spacefarers',
       text: `Congratulation ${name}! Your adventure begins now.`,
     };
 
-    return transporter.sendMail(mailOptions);
+    try {
+      await transporter.sendMail(mailOptions);
+      console.log(`Email sent to ${toEmail}`);
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
   }
 }
 

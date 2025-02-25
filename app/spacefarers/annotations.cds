@@ -7,37 +7,37 @@ annotate service.Spacefarers with @(
         Data : [
             {
                 $Type : 'UI.DataField',
-                Label : '{i18n>Firstname1}',
+                Label : '{i18n>Firstname}',
                 Value : first_name,
             },
             {
                 $Type : 'UI.DataField',
-                Label : '{i18n>Lastname1}',
+                Label : '{i18n>Lastname}',
                 Value : last_name,
             },
             {
                 $Type : 'UI.DataField',
-                Label : '{i18n>Stardustcollection1}',
+                Label : '{i18n>Stardustcollection}',
                 Value : stardust_collection,
             },
             {
                 $Type : 'UI.DataField',
-                Label : '{i18n>Birthday1}',
+                Label : '{i18n>Birthday}',
                 Value : birthday,
             },
             {
                 $Type : 'UI.DataField',
-                Label : '{i18n>Email1}',
+                Label : '{i18n>Email}',
                 Value : email,
             },
             {
                 $Type : 'UI.DataField',
-                Label : '{i18n>Wormholenavigationskill1}',
+                Label : '{i18n>Wormholenavigationskill}',
                 Value : wormhole_navigation_skill,
             },
             {
                 $Type : 'UI.DataField',
-                Label : '{i18n>Spacesuitcolor1}',
+                Label : '{i18n>Spacesuitcolor}',
                 Value : spacesuit_color,
             },
         ],
@@ -63,11 +63,6 @@ annotate service.Spacefarers with @(
         },
         {
             $Type : 'UI.DataField',
-            Label : '{i18n>Nickname}',
-            Value : nick_name,
-        },
-        {
-            $Type : 'UI.DataField',
             Label : '{i18n>Stardustcollection}',
             Value : stardust_collection,
         },
@@ -90,6 +85,11 @@ annotate service.Spacefarers with @(
             $Type : 'UI.DataField',
             Value : position.title,
             Label : '{i18n>Positiontitle}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : '{i18n>Originplanetname}',
+            Value : origin_planet_name,
         },
     ],
     UI.SelectionFields : [

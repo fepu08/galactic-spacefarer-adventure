@@ -122,7 +122,7 @@
                     "DataField::last_name": {
                       "width": "12.5%"
                     },
-                    "DataField::nick_name": {
+                    "DataField::origin_planet_name": {
                       "width": "12.5%"
                     },
                     "DataField::stardust_collection": {

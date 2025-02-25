@@ -46,6 +46,7 @@ entity Departments: cuid {
 
 entity Spacesuits: cuid {
 	@mandatory type: SpacesuitType;
+	@assert.format: '^[0-9a-fA-F]{6}$'
 	@mandatory color: String(6);
 }
 
