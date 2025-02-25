@@ -43,7 +43,7 @@ entity Stardusts : cuid {
 	spacefarers: Composition of many SpacefarerToStardust on spacefarers.stardust = $self;
 }
 
-entity SpacefarerToStardust {
+entity SpacefarerToStardust : cuid {
 	spacefarer: Association to Spacefarers;
 	stardust: Association to Stardusts;
 	quantity: Integer default 0;
@@ -54,7 +54,7 @@ entity Skills : cuid {
 	spacefarers: Composition of many SpacefarerToSkill on spacefarers.skill = $self;
 }
 
-entity SpacefarerToSkill {
+entity SpacefarerToSkill : cuid {
 	spacefarer: Association to Spacefarers;
 	skill: Association to Skills;
 	@assert.range: [0,10]
