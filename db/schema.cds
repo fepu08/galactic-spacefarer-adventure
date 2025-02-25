@@ -6,6 +6,14 @@ type SpacesuitType : String enum {
     Armored  = 'armored';
     Explorer  = 'explorer';
 }
+
+type StardustRarityType : String enum {
+    Common;
+		Rare;
+		Epic;
+		Legendary;
+}
+
 @assert.unique  : {
 	spacesuit: [ spacesuit ]
 }
@@ -19,11 +27,38 @@ entity Spacefarers : managed, cuid {
 	@assert.range: [0,1000000]
 	stardust_collection: Integer default 0;
 
+	skills: Composition of many SpacefarerToSkill on skills.spacefarer = $self;
+	stardusts: Composition of many SpacefarerToStardust on stardusts.spacefarer = $self;
+
 	@mandatory first_name: String;
 	@mandatory last_name: String;
 	nick_name: String;
 	@mandatory birthday: Date;
 	@mandatory email: String;
+}
+
+entity Stardusts : cuid {
+	@mandatory title: String;
+	rarity: StardustRarityType default 'Common';
+	spacefarers: Composition of many SpacefarerToStardust on spacefarers.stardust = $self;
+}
+
+entity SpacefarerToStardust {
+	spacefarer: Association to Spacefarers;
+	stardust: Association to Stardusts;
+	quantity: Integer default 0;
+}
+
+entity Skills : cuid {
+	@mandatory title: String;
+	spacefarers: Composition of many SpacefarerToSkill on spacefarers.skill = $self;
+}
+
+entity SpacefarerToSkill {
+	spacefarer: Association to Spacefarers;
+	skill: Association to Skills;
+	@assert.range: [0,10]
+	proficiency: Integer default 0;
 }
 
 @assert.unique  : {
