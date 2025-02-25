@@ -20,5 +20,38 @@
   },
   "sapux": [
     "app/spacefarers"
-  ]
+  ],
+  "cds": {
+    "requires": {
+      "auth": {
+        "kind": "basic",
+        "users": {
+          "admin": {
+            "password": "",
+            "roles": [
+              "admin"
+            ]
+          },
+          "SpacefarerFromZyphor": {
+            "password": "",
+            "roles": [
+              "spacefarer"
+            ],
+            "attr": {
+              "origin_planet_ID": "55929c45-9f7c-49cd-9f05-35848d9f98d1"
+            }
+          },
+          "SpacefarerFromXentos": {
+            "password": "",
+            "roles": [
+              "spacefarer"
+            ],
+            "attr": {
+              "origin_planet_ID": "12efce5a-4904-4e26-b866-acfb9ac3577d"
+            }
+          }
+        }
+      }
+    }
+  }
 }

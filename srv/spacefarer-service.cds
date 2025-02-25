@@ -12,4 +12,16 @@ service SpacefarerService @(requires:'authenticated-user', path: '/spacefarers')
 	entity Departments as projection on my.Departments;
 	entity Positions as projection on my.Positions;
 	entity Spacesuits as projection on my.Spacesuits;
+
+	annotate Spacefarers with @(restrict: [
+    {
+        grant: ['READ'],
+        where: 'origin_planet_ID = $user.origin_planet_ID',
+        to   : 'spacefarer'
+    },
+    {
+        grant: ['*'],
+        to   : 'admin'
+    }
+	])
 }
