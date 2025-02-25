@@ -45,15 +45,34 @@ class SpacefarerService extends cds.ApplicationService {
     });
 
     this.after('CREATE', this.Spacefarers, async (req) => {
-      try {
-        await this.sendEmail(req.email, `${req.first_name} ${req.last_name}`);
-        console.log(`Email sent to ${req.email}`);
-      } catch (error) {
-        console.error('Error sending email:', error);
+      const { spacesuit_color, spacesuit_ID } = req;
+      if (spacesuit_color && spacesuit_ID) {
+        await this.updateSpacesuitColor(spacesuit_color, spacesuit_ID);
+      }
+      await this.sendWelcomeEmail(
+        req.email,
+        `${req.first_name} ${req.last_name}`
+      );
+    });
+
+    this.on('UPDATE', this.Spacefarers, async (req) => {
+      const { spacesuit_color, spacesuit_ID } = req.data;
+      if (spacesuit_color && spacesuit_ID) {
+        this.updateSpacesuitColor(spacesuit_color, spacesuit_ID);
       }
     });
 
     return super.init();
+  }
+
+  async updateSpacesuitColor(spacesuit_color, spacesuit_ID) {
+    if (spacesuit_color && spacesuit_ID) {
+      await cds.run(
+        UPDATE(this.Spacesuits)
+          .set({ color: spacesuit_color })
+          .where({ ID: spacesuit_ID })
+      );
+    }
   }
 
   enhanceWormholeNavigationSkill(wormhole_navigation_skill) {
@@ -82,7 +101,7 @@ class SpacefarerService extends cds.ApplicationService {
     return availableSuit;
   }
 
-  sendEmail(to, name) {
+  async sendWelcomeEmail(toEmail, name) {
     const emailConfig = cds.env.requires.emailConfig;
     if (!emailConfig) {
       throw new Error('No Email config set.');
@@ -91,12 +110,17 @@ class SpacefarerService extends cds.ApplicationService {
 
     const mailOptions = {
       from: 'Spacefarers',
-      to,
+      to: toEmail,
       subject: 'Welcome to Spacefarers',
       text: `Congratulation ${name}! Your adventure begins now.`,
     };
 
-    return transporter.sendMail(mailOptions);
+    try {
+      await transporter.sendMail(mailOptions);
+      console.log(`Email sent to ${toEmail}`);
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
   }
 }
 
