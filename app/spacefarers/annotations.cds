@@ -1,44 +1,69 @@
 using SpacefarerService as service from '../../srv/spacefarer-service';
-annotate aldi.cap.galactic_spacefarer_adventure.Spacefarers with @fiori.draft.enabled;
-annotate SpacefarerService.Spacefarers with @odata.draft.enabled;
+using from '../../db/schema';
+
 annotate service.Spacefarers with @(
     UI.FieldGroup #GeneratedGroup : {
         $Type : 'UI.FieldGroupType',
         Data : [
             {
                 $Type : 'UI.DataField',
-                Label : '{i18n>Firstname}',
-                Value : first_name,
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : '{i18n>Lastname}',
-                Value : last_name,
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : '{i18n>Stardustcollection}',
-                Value : stardust_collection,
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : '{i18n>Birthday}',
-                Value : birthday,
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : '{i18n>Email}',
-                Value : email,
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : '{i18n>Wormholenavigationskill}',
+                Label : 'wormhole_navigation_skill',
                 Value : wormhole_navigation_skill,
             },
             {
                 $Type : 'UI.DataField',
-                Label : '{i18n>Spacesuitcolor}',
+                Label : 'stardust_collection',
+                Value : stardust_collection,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'first_name',
+                Value : first_name,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'last_name',
+                Value : last_name,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'nick_name',
+                Value : nick_name,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'birthday',
+                Value : birthday,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'email',
+                Value : email,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'origin_planet_name',
+                Value : origin_planet_name,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'spacesuit_color',
                 Value : spacesuit_color,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'department_title',
+                Value : department_title,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'position_title',
+                Value : position_title,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'full_name',
+                Value : full_name,
             },
         ],
     },
@@ -46,65 +71,49 @@ annotate service.Spacefarers with @(
         {
             $Type : 'UI.ReferenceFacet',
             ID : 'GeneratedFacet1',
-            Label : '{i18n>GeneralInformation}',
+            Label : 'General Information',
             Target : '@UI.FieldGroup#GeneratedGroup',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
+            Label : 'Own Stardusts',
+            ID : 'OwnStardusts',
+            Target : 'stardusts/@UI.LineItem#OwnStardusts',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
+            Label : 'Skills',
+            ID : 'Skills',
+            Target : 'skills/@UI.LineItem#Skills',
         },
     ],
     UI.LineItem : [
         {
             $Type : 'UI.DataField',
-            Label : '{i18n>Firstname}',
-            Value : first_name,
-        },
-        {
-            $Type : 'UI.DataField',
-            Label : '{i18n>Lastname}',
-            Value : last_name,
-        },
-        {
-            $Type : 'UI.DataField',
-            Label : '{i18n>Stardustcollection}',
-            Value : stardust_collection,
-        },
-        {
-            $Type : 'UI.DataField',
-            Label : '{i18n>Wormholenavigationskill}',
+            Label : 'wormhole_navigation_skill',
             Value : wormhole_navigation_skill,
         },
         {
             $Type : 'UI.DataField',
-            Value : spacesuit_color,
-            Label : '{i18n>Spacesuitcolor}',
+            Label : 'stardust_collection',
+            Value : stardust_collection,
         },
         {
             $Type : 'UI.DataField',
-            Value : department.title,
-            Label : '{i18n>Departmenttitle}',
+            Label : 'first_name',
+            Value : first_name,
         },
         {
             $Type : 'UI.DataField',
-            Value : position.title,
-            Label : '{i18n>Positiontitle}',
+            Label : 'last_name',
+            Value : last_name,
         },
         {
             $Type : 'UI.DataField',
-            Label : '{i18n>Originplanetname}',
-            Value : origin_planet_name,
+            Label : 'nick_name',
+            Value : nick_name,
         },
     ],
-    UI.SelectionFields : [
-        department.title,
-        position.title,
-        origin_planet_name,
-    ],
-    UI.HeaderInfo : {
-        Title : {
-            $Type : 'UI.DataField',
-            Value : full_name,
-        },
-        TypeName : '',
-        TypeNamePlural : '',
-    },
 );
 
 annotate service.Spacefarers with {
@@ -173,15 +182,38 @@ annotate service.Spacefarers with {
     }
 };
 
-annotate service.Departments with {
-    title @Common.Label : '{i18n>Departmenttitle}'
-};
+annotate service.SpacefarerToStardust with @(
+    UI.LineItem #OwnStardusts : [
+        {
+            $Type : 'UI.DataField',
+            Value : stardust.title,
+            Label : 'title',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : quantity,
+            Label : 'quantity',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : stardust.rarity,
+            Label : 'rarity',
+        },
+    ]
+);
 
-annotate service.Positions with {
-    title @Common.Label : '{i18n>Positiontitle}'
-};
-
-annotate service.Spacefarers with {
-    origin_planet_name @Common.Label : '{i18n>Originplanetname}'
-};
+annotate service.SpacefarerToSkill with @(
+    UI.LineItem #Skills : [
+        {
+            $Type : 'UI.DataField',
+            Value : skill.title,
+            Label : 'title',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : proficiency,
+            Label : 'proficiency',
+        },
+    ]
+);
 

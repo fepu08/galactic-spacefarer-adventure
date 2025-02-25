@@ -1,7 +1,7 @@
 ## Application Details
 |               |
 | ------------- |
-|**Generation Date and Time**<br>Mon Feb 24 2025 18:50:52 GMT+0100 (Central European Standard Time)|
+|**Generation Date and Time**<br>Tue Feb 25 2025 18:40:22 GMT+0100 (Central European Standard Time)|
 |**App Generator**<br>@sap/generator-fiori-elements|
 |**App Generator Version**<br>1.16.4|
 |**Generation Platform**<br>Visual Studio Code|
@@ -17,10 +17,11 @@
 |**Enable TypeScript**<br>False|
 |**Add Eslint configuration**<br>False|
 |**Main Entity**<br>Spacefarers|
+|**Navigation Entity**<br>None|
 
 ## spacefarers
 
-Galactic Spacafarer Adventure
+An SAP Fiori application.
 
 ### Starting the generated app
 

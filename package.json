@@ -19,6 +19,8 @@
     "watch-spacefarers": "cds watch --open spacefarers/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "sapux": [
+    "app/admin-books",
+    "app/browse",
     "app/spacefarers"
   ],
   "cds": {

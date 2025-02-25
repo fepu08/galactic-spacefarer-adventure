@@ -13,7 +13,7 @@
     "sourceTemplate": {
       "id": "@sap/generator-fiori:lrop",
       "version": "1.16.4",
-      "toolsId": "c1d3c783-c12d-4355-8a0b-5b1034d7b431"
+      "toolsId": "d2d2975f-58fd-40b2-81ad-e35dd853a7f4"
     },
     "dataSources": {
       "mainService": {
@@ -114,32 +114,6 @@
                 "@com.sap.vocabularies.UI.v1.LineItem": {
                   "tableSettings": {
                     "type": "ResponsiveTable"
-                  },
-                  "columns": {
-                    "DataField::first_name": {
-                      "width": "12.5%"
-                    },
-                    "DataField::last_name": {
-                      "width": "12.5%"
-                    },
-                    "DataField::origin_planet_name": {
-                      "width": "12.5%"
-                    },
-                    "DataField::stardust_collection": {
-                      "width": "12.5%"
-                    },
-                    "DataField::wormhole_navigation_skill": {
-                      "width": "12.5%"
-                    },
-                    "DataField::spacesuit_color": {
-                      "width": "12.5%"
-                    },
-                    "DataField::department::title": {
-                      "width": "12.5%"
-                    },
-                    "DataField::position::title": {
-                      "width": "12.5%"
-                    }
                   }
                 }
               }
