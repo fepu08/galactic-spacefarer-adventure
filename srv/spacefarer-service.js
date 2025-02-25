@@ -7,10 +7,6 @@ class SpacefarerService extends cds.ApplicationService {
     const entries = cds.entities('SpacefarerService');
     this.Spacefarers = entries.Spacefarers;
     this.Spacesuits = entries.Spacesuits;
-    this.SpacefareSkills = entries.SpacefareSkills;
-    this.Skills = entries.Skills;
-    this.Stardusts = entries.Stardusts;
-    this.wormholeNavigationIdCache = null;
   }
 
   async init() {
@@ -26,11 +22,7 @@ class SpacefarerService extends cds.ApplicationService {
     });
 
     this.before('CREATE', this.Spacefarers, async (req) => {
-      const { skills, stardusts } = req.data;
-      const updatedSkills = await this.enhanceWormholeNavigationSkill(skills);
-      const updatedStardusts = await this.enhanceStarDustCollection(stardusts);
       const availableSuit = await this.getAvailableSuit();
-
       if (!availableSuit) {
         req.error(
           400,
@@ -39,9 +31,17 @@ class SpacefarerService extends cds.ApplicationService {
         return;
       }
 
+      const { wormhole_navigation_skill, stardust_collection } = req.data;
+      const enhancedSkill = this.enhanceWormholeNavigationSkill(
+        wormhole_navigation_skill ?? 0
+      );
+      const enhancedStardustCollection = this.enhanceStarDustCollection(
+        stardust_collection ?? 0
+      );
+
       req.data.spacesuit_ID = availableSuit.ID;
-      req.data.skills = updatedSkills;
-      req.data.stardusts = updatedStardusts;
+      req.data.wormhole_navigation_skill = enhancedSkill;
+      req.data.stardust_collection = enhancedStardustCollection;
     });
 
     this.after('CREATE', this.Spacefarers, async (req) => {
@@ -56,83 +56,21 @@ class SpacefarerService extends cds.ApplicationService {
     return super.init();
   }
 
-  async getWormholeNavigationSkillId() {
-    if (this.wormholeNavigationIdCache) {
-      console.log('Cache Hit');
-      return this.wormholeNavigationIdCache;
-    }
-    console.log('Cache Miss');
-    let wormholeNavigationSkillId = null;
-    const existingSkill = await cds.db.run(
-      SELECT.one.from(this.Skills).where({ title: 'Wormhole Navigation' })
-    );
-
-    if (existingSkill) {
-      console.log('Wormhole Navigation Skill exists');
-      wormholeNavigationSkillId = existingSkill.ID;
-    } else {
-      console.log('Creating "Wormhole Navigation" skill');
-      const [newSkill] = await cds.db.run(
-        INSERT.into(this.Skills).entries({
-          title: 'Wormhole Navigation',
-        })
-      );
-      wormholeNavigationSkillId = newSkill.ID;
+  enhanceWormholeNavigationSkill(wormhole_navigation_skill) {
+    if (wormhole_navigation_skill < 5) {
+      console.log('Watching wormhole navigation tutorials on SpaceTube...');
+      return 5;
     }
 
-    // Cache the ID to avoid unnecessary DB queries
-    this.wormholeNavigationIdCache = wormholeNavigationSkillId;
-    return this.wormholeNavigationIdCache;
+    return wormhole_navigation_skill;
   }
 
-  async enhanceWormholeNavigationSkill(skills) {
-    let wormholeNavigationSkillId = await this.getWormholeNavigationSkillId();
-
-    const wormholeNavigationSkill = skills.find(
-      (skill) => skill.skill_ID === wormholeNavigationSkillId
-    ) ?? { skill_ID: wormholeNavigationSkillId, proficiency: 0 };
-
-    while (wormholeNavigationSkill.proficiency < 5) {
-      console.log('Watching a tutorial about Wormhole Navigation...');
-      ++wormholeNavigationSkill.proficiency;
+  enhanceStarDustCollection(stardusts) {
+    if (stardusts < 1000) {
+      console.log('Collecting stardusts...');
+      return 1000;
     }
-
-    return (
-      skills
-        .map((skill) =>
-          skill.skill_ID === wormholeNavigationSkill
-            ? wormholeNavigationSkill
-            : skill
-        )
-        // add skill if it does not exist
-        .concat(
-          skills.some((skill) => skill.skill_ID === wormholeNavigationSkillId)
-            ? []
-            : [wormholeNavigationSkill]
-        )
-    );
-  }
-
-  async enhanceStarDustCollection(stardusts) {
-    let collectionSize = stardusts
-      ? stardusts.reduce((sum, item) => sum + item.quantity, 0)
-      : 0;
-
-    if (collectionSize >= 10) {
-      console.log('Ready for adventure');
-      return stardusts;
-    }
-
-    const randomStardust = await cds.db.run(
-      SELECT.one.from(this.Stardusts).orderBy('RANDOM()')
-    );
-
-    const res = stardusts ?? [];
-    res.push({
-      stardust_ID: randomStardust.ID,
-      quantity: 10 - collectionSize,
-    });
-    return res;
+    return stardusts;
   }
 
   async getAvailableSuit() {
