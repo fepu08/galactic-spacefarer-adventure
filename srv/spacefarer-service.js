@@ -56,13 +56,34 @@ class SpacefarerService extends cds.ApplicationService {
     });
 
     this.on('UPDATE', this.Spacefarers, async (req) => {
-      const { spacesuit_color, spacesuit_ID } = req.data;
-      if (spacesuit_color && spacesuit_ID) {
-        this.updateSpacesuitColor(spacesuit_color, spacesuit_ID);
+      const { spacesuit_color, spacesuit_ID, ...spacefarer } = req.data;
+      try {
+        if (spacesuit_color && spacesuit_ID) {
+          this.updateSpacesuitColor(spacesuit_color, spacesuit_ID);
+        }
+
+        await this.updateSpacefarer(spacefarer);
+      } catch (error) {
+        console.error(`Error during updating spacefarer: ${error}`);
       }
     });
 
     return super.init();
+  }
+
+  async updateSpacefarer(spacefarer) {
+    await cds.run(
+      UPDATE(this.Spacefarers)
+        .set({
+          first_name: spacefarer.first_name,
+          last_name: spacefarer.last_name,
+          birthday: spacefarer.birthday,
+          stardust_collection: spacefarer.stardust_collection,
+          email: spacefarer.email,
+          wormhole_navigation_skill: spacefarer.wormhole_navigation_skill,
+        })
+        .where({ ID: spacefarer.ID })
+    );
   }
 
   async updateSpacesuitColor(spacesuit_color, spacesuit_ID) {
